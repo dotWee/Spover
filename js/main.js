@@ -1,61 +1,61 @@
-let cover = document.querySelector('canvas');
-let ctx = cover.getContext('2d');
-
-let coverImage = new Image();
-coverImage.src = 'http://lorempixel.com/g/300/300/';
-
-let faceLoaded = false;
-
-coverImage.onload = function () {
+let canvas = document.querySelector('canvas'), context = canvas.getContext('2d'), canvasImage = new Image(), faceLoaded = false;
+canvasImage.src = 'http://lorempixel.com/g/300/300/';
+canvasImage.onload = function () {
     faceLoaded = true;
-    console.log('coverImage loaded');
-    URL.revokeObjectURL(coverImage.src);
-    updateCover()
+    console.log('canvasImage loaded');
+    URL.revokeObjectURL(canvasImage.src);
+    updateOverlay()
 };
 
 let inputImage = document.querySelector('#selectImage');
-inputImage.addEventListener('change', fileChange);
+inputImage.addEventListener('change', function (e) {
+    fileChange(e);
+});
 
 function fileChange(e) {
-    coverImage.src = URL.createObjectURL(e.target.files[0]);
+    canvasImage.src = URL.createObjectURL(e.target.files[0]);
+    console.log("url=" + URL.createObjectURL(e.target.files[0]));
 }
 
 let inputColor = document.querySelector('#selectColor');
+inputColor.addEventListener('input', function () {
+    updateOverlay();
+});
+inputColor.addEventListener('change', function () {
+    updateOverlay();
+});
 
-function updateCover() {
+function updateOverlay() {
 
     // clear
-    ctx.clearRect(0, 0, 300, 300);
+    context.clearRect(0, 0, 300, 300);
 
     // gradient
-    let gradient = ctx.createLinearGradient(300, 0, 0, 300);
+    let gradient = context.createLinearGradient(300, 0, 0, 300);
 
     gradient.addColorStop(0, inputColor.value);
     gradient.addColorStop(0.6, inputColor.value);
     gradient.addColorStop(1, inputColor.value);
 
-    ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, 300, 300);
+    context.fillStyle = gradient;
+    context.fillRect(0, 0, 300, 300);
 
-    ctx.globalCompositeOperation = 'multiply';
-    ctx.globalAlpha = 0.5;
+    context.globalCompositeOperation = 'multiply';
+    context.globalAlpha = 0.5;
 
     if (faceLoaded) {
-        ctx.drawImage(coverImage, 0, 0, 300, 300)
+        context.drawImage(canvasImage, 0, 0, 300, 300)
     }
 
-    ctx.globalCompositeOperation = 'source-over';
-    ctx.globalAlpha = 1;
+    context.globalCompositeOperation = 'source-over';
+    context.globalAlpha = 1;
 
 }
 
-inputColor.addEventListener('input', updateCover);
-inputColor.addEventListener('change', updateCover);
-
-updateCover();
+updateOverlay();
 
 document.getElementById('downloadImage').addEventListener('click', function () {
-    this.href = cover.toDataURL();
+    this.href = canvas.toDataURL();
     this.download = 'Image.png';
 }, false);
 
