@@ -1,26 +1,26 @@
-var cover = document.querySelector('canvas');
-var ctx = cover.getContext('2d');
+let cover = document.querySelector('canvas');
+let ctx = cover.getContext('2d');
 
-var face = new Image();
-face.src = 'http://lorempixel.com/g/300/300/';
+let coverImage = new Image();
+coverImage.src = 'http://lorempixel.com/g/300/300/';
 
-var faceLoaded = false;
+let faceLoaded = false;
 
-face.onload = function () {
+coverImage.onload = function () {
     faceLoaded = true;
-    console.log('face loaded');
-    URL.revokeObjectURL(face.src);
+    console.log('coverImage loaded');
+    URL.revokeObjectURL(coverImage.src);
     updateCover()
 };
 
-var inputImage = document.querySelector('#selectImage');
+let inputImage = document.querySelector('#selectImage');
 inputImage.addEventListener('change', fileChange);
 
 function fileChange(e) {
-    face.src = URL.createObjectURL(e.target.files[0]);
+    coverImage.src = URL.createObjectURL(e.target.files[0]);
 }
 
-var inputColor = document.querySelector('#selectColor');
+let inputColor = document.querySelector('#selectColor');
 
 function updateCover() {
 
@@ -28,7 +28,7 @@ function updateCover() {
     ctx.clearRect(0, 0, 300, 300);
 
     // gradient
-    var gradient = ctx.createLinearGradient(300, 0, 0, 300);
+    let gradient = ctx.createLinearGradient(300, 0, 0, 300);
 
     gradient.addColorStop(0, inputColor.value);
     gradient.addColorStop(0.6, inputColor.value);
@@ -41,7 +41,7 @@ function updateCover() {
     ctx.globalAlpha = 0.5;
 
     if (faceLoaded) {
-        ctx.drawImage(face, 0, 0, 300, 300)
+        ctx.drawImage(coverImage, 0, 0, 300, 300)
     }
 
     ctx.globalCompositeOperation = 'source-over';
